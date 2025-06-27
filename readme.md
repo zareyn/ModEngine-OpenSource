@@ -29,4 +29,4 @@
 git clone https://github.com/zareyn/ModEngine-OpenSource
 cd ModEngine-OpenSource
 npm install
-npm start```
+npm start
