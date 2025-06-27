@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mod Engine</title>
+    <script type="module" src="main.js"></script>
+    <script type="module" src="obj.js"></script>
+    <style>
+        #game-container {
+            overflow: hidden;
+            border: 1px solid #000;
+            width: 1000px;
+            height: 600px;
+            position: relative;
+        }
+
+        #gameCanvas {
+            image-rendering: pixelated;
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        
+        body {
+            margin: 0;
+            padding: 20px;
+            display: flex;
+
+            background-color: #707070;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas" width="800" height="800"></canvas>
+    </div>
+</body>
+</html>

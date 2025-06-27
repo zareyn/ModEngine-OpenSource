@@ -1,0 +1,31 @@
+{
+    "width": 20,
+    "height":  20,
+    "objects": [
+        {
+            "name": "player",
+            "x": 2,
+            "y": 2
+        },
+        {
+            "name": "observer",
+            "x": 9,
+            "y": 5
+        },
+        {
+            "name": "observer",
+            "x": 8,
+            "y": 3
+        },
+        {
+            "name": "observer",
+            "x": 10,
+            "y": 10
+        },
+                {
+            "name": "box",
+            "x": 9,
+            "y": 11
+        }
+    ]
+}

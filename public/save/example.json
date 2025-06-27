@@ -1,0 +1,35 @@
+{
+    "player": {
+        "modules": ["square", "move", "camera", "collision"],
+        "params": {
+            "color": "#FF9900",
+            "size": 2,
+            "speed": 1,
+            "followSpeed": 0.1,
+            "smooth": true,
+            "width":400,
+            "height":400,
+            "collidable": true,
+            "solid": true,
+            "checkCollision": true
+        }
+    },
+    "observer": {
+        "modules": ["square", "collision"],
+        "params": {
+            "color": "#000000",
+            "size": 1,
+            "collidable": true,
+            "solid": true
+        }
+    },
+    "box": {
+        "modules": ["square", "collision"],
+        "params": {
+            "color": "#33FF33",
+            "size": 3,
+            "collidable": true,
+            "solid": false
+        }
+    }
+}
