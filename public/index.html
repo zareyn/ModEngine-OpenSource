@@ -162,28 +162,6 @@
             overflow: auto;
         }
 
-        .panel-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .panel-button {
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.2s ease;
-        }
-
-        .panel-button:hover {
-            background: #5d88ff;
-            transform: translateY(-1px);
-        }
-
-        /* Стили для полноэкранного режима */
         .fullscreen-btn {
             position: absolute;
             bottom: 10px;
@@ -205,6 +183,26 @@
 
         .game-container-wrapper {
             position: relative;
+        }
+
+        /* Стили для полноэкранного режима */
+        #game-container.fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 9999;
+            border-radius: 0;
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #game-container.fullscreen #gameCanvas {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain;
         }
     </style>
 </head>
@@ -240,38 +238,80 @@
 
     <script>
         // Обработчик полноэкранного режима
-        document.getElementById('fullscreen-btn').addEventListener('click', toggleFullscreen);
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        const gameContainer = document.getElementById('game-container');
+        const gameCanvas = document.getElementById('gameCanvas');
+
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
 
         function toggleFullscreen() {
-            const container = document.getElementById('game-container');
-            
             if (!document.fullscreenElement) {
-                if (container.requestFullscreen) {
-                    container.requestFullscreen();
-                } else if (container.webkitRequestFullscreen) { /* Safari */
-                    container.webkitRequestFullscreen();
-                } else if (container.msRequestFullscreen) { /* IE11 */
-                    container.msRequestFullscreen();
+                // Сохраняем оригинальные размеры перед переходом в полноэкранный режим
+                gameContainer.dataset.originalWidth = gameContainer.style.width;
+                gameContainer.dataset.originalHeight = gameContainer.style.height;
+                
+                gameContainer.classList.add('fullscreen');
+                
+                if (gameContainer.requestFullscreen) {
+                    gameContainer.requestFullscreen();
+                } else if (gameContainer.webkitRequestFullscreen) {
+                    gameContainer.webkitRequestFullscreen();
+                } else if (gameContainer.msRequestFullscreen) {
+                    gameContainer.msRequestFullscreen();
                 }
             } else {
+                gameContainer.classList.remove('fullscreen');
+                
                 if (document.exitFullscreen) {
                     document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) { /* Safari */
+                } else if (document.webkitExitFullscreen) {
                     document.webkitExitFullscreen();
-                } else if (document.msExitFullscreen) { /* IE11 */
+                } else if (document.msExitFullscreen) {
                     document.msExitFullscreen();
                 }
             }
         }
 
-        // Обновляем текст кнопки при изменении полноэкранного режима
-        document.addEventListener('fullscreenchange', updateFullscreenButton);
-        document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
-        document.addEventListener('msfullscreenchange', updateFullscreenButton);
+        // Обработчик изменения размера для масштабирования canvas
+        function handleResize() {
+            if (gameContainer.classList.contains('fullscreen')) {
+                // В полноэкранном режиме - масштабируем canvas
+                const scale = Math.min(
+                    window.innerWidth / 800,
+                    window.innerHeight / 800
+                );
+                
+                gameCanvas.style.width = `${800 * scale}px`;
+                gameCanvas.style.height = `${800 * scale}px`;
+                gameCanvas.style.margin = 'auto';
+                gameCanvas.style.display = 'block';
+            } else {
+                // В обычном режиме - возвращаем оригинальные размеры
+                gameCanvas.style.width = '100%';
+                gameCanvas.style.height = '100%';
+            }
+        }
+
+        // Слушатели событий
+        document.addEventListener('fullscreenchange', () => {
+            updateFullscreenButton();
+            handleResize();
+        });
+        
+        document.addEventListener('webkitfullscreenchange', () => {
+            updateFullscreenButton();
+            handleResize();
+        });
+        
+        document.addEventListener('msfullscreenchange', () => {
+            updateFullscreenButton();
+            handleResize();
+        });
+
+        window.addEventListener('resize', handleResize);
 
         function updateFullscreenButton() {
-            const btn = document.getElementById('fullscreen-btn');
-            btn.textContent = document.fullscreenElement ? 'Exit Fullscreen' : 'Fullscreen';
+            fullscreenBtn.textContent = document.fullscreenElement ? 'Exit Fullscreen' : 'Fullscreen';
         }
     </script>
 </body>
