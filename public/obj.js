@@ -6,82 +6,47 @@ const GRID_COLOR = '#333';
 const GRID_LINE_WIDTH = 1;
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const container = document.createElement('div');
-    container.className = 'objects-container';
-    document.body.appendChild(container);
+    const tbody = document.querySelector('.objects-table tbody');
+    
+    try {
+        const objectsData = await loadObjectData();
 
-    const table = document.createElement('table');
-    table.className = 'objects-table';
-    container.appendChild(table);
+        for (const objName in objectsData) {
+            const objData = objectsData[objName];
+            const result = await createObject(objName, objData);
 
-    const thead = document.createElement('thead');
-    thead.innerHTML = `
-        <tr>
-            <th>Объект</th>
-            <th>Параметры</th>
-            <th>Карта</th>
-        </tr>
-    `;
-    table.appendChild(thead);
-
-    const tbody = document.createElement('tbody');
-    table.appendChild(tbody);
-
-    const objectsData = await loadObjectData();
-
-    for (const objName in objectsData) {
-        const objData = objectsData[objName];
-        const result = await createObject(objName, objData);
-
-        if (result) {
-            const row = document.createElement('tr');
-            
-            const nameCell = document.createElement('td');
-            nameCell.textContent = objName;
-            row.appendChild(nameCell);
-            
-            const paramsCell = document.createElement('td');
-            paramsCell.textContent = JSON.stringify(result.params, null, 2);
-            row.appendChild(paramsCell);
-            
-            const mapCell = document.createElement('td');
-            const mapCanvas = createMap(result.instance, 10); // 10x10 клеток
-            mapCell.appendChild(mapCanvas);
-            row.appendChild(mapCell);
-            
-            tbody.appendChild(row);
+            if (result) {
+                const row = document.createElement('tr');
+                
+                const nameCell = document.createElement('td');
+                nameCell.textContent = objName;
+                row.appendChild(nameCell);
+                
+                const paramsCell = document.createElement('td');
+                const jsonView = document.createElement('pre');
+                jsonView.className = 'json-view';
+                jsonView.textContent = JSON.stringify(result.params, null, 2);
+                paramsCell.appendChild(jsonView);
+                row.appendChild(paramsCell);
+                
+                const mapCell = document.createElement('td');
+                const mapCanvas = createMap(result.instance, 10); // 10x10 клеток
+                mapCell.appendChild(mapCanvas);
+                row.appendChild(mapCell);
+                
+                tbody.appendChild(row);
+            }
         }
+    } catch (error) {
+        console.error('Error loading objects:', error);
+        const errorRow = document.createElement('tr');
+        const errorCell = document.createElement('td');
+        errorCell.colSpan = 3;
+        errorCell.textContent = `Error loading objects: ${error.message}`;
+        errorCell.style.color = '#ff5555';
+        errorRow.appendChild(errorCell);
+        tbody.appendChild(errorRow);
     }
-
-    const style = document.createElement('style');
-    style.textContent = `
-        .objects-container {
-            padding: 20px;
-            font-family: Arial, sans-serif;
-        }
-        .objects-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .objects-table th, .objects-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-            vertical-align: top;
-        }
-        .objects-table th {
-            background-color: #f2f2f2;
-        }
-        .objects-table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        .map-canvas {
-            background-color: #111;
-            width: ${GRID_SIZE * 10}px;
-            height: ${GRID_SIZE * 10}px;
-        }
-    `;
-    document.head.appendChild(style);
 });
 
 function createMap(instance, gridCells) {
