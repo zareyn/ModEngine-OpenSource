@@ -1,4 +1,4 @@
-# <img src="https://./map.png" width="800">
+# <img src="https://github.com/zareyn/ModEngine-OpenSource/blob/main/map.png" width="800">
 
 ### Описание
 Это модульная система для создания 2D-игр на JavaScript с использованием Canvas. Система позволяет создавать объекты из модулей, которые добавляют функциональность (движение, коллизии, отрисовку и т.д.).
