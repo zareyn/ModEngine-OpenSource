@@ -1,8 +1,8 @@
 {
     "player": {
-        "modules": ["square", "move", "camera", "collision"],
+        "modules": ["sprite", "move", "camera", "collision"],
         "params": {
-            "color": "#FF9900",
+            "spriteName": "test",
             "size": 2,
             "speed": 1,
             "followSpeed": 0.1,
