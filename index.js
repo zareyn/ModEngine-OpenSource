@@ -14,31 +14,14 @@ const PORT = process.env.PORT || 3000;
 // Статические файлы
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 🎨 API ДЛЯ СПРАЙТОВ И ИЗОБРАЖЕНИЙ
 app.get('/api/sprites', (req, res) => {
     const spritesPath = path.join(__dirname, 'public', 'img', 'spr.json');
-    console.log('🔍 Ищу спрайты по пути:', spritesPath);
-    
-    // Проверяем существует ли файл
-    if (!fs.existsSync(spritesPath)) {
-        console.error('❌ Файл не найден:', spritesPath);
-        return res.status(500).json({ error: 'Sprite file not found' });
-    }
-    
     fs.readFile(spritesPath, 'utf8', (err, data) => {
         if (err) {
-            console.error('❌ Ошибка чтения файла:', err);
-            return res.status(500).json({ error: 'Failed to read sprite file' });
+            console.error('Error loading sprites:', err);
+            return res.status(500).json({ error: 'Failed to load sprites' });
         }
-        
-        try {
-            const spriteData = JSON.parse(data);
-            console.log('✅ Спрайты загружены через API');
-            res.json(spriteData);
-        } catch (parseError) {
-            console.error('❌ Ошибка парсинга JSON:', parseError);
-            res.status(500).json({ error: 'Invalid JSON format' });
-        }
+        res.json(JSON.parse(data));
     });
 });
 

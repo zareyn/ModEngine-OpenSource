@@ -15,8 +15,9 @@
         }
     },
     "wall": {
-        "modules": ["square", "collision"],
+        "modules": ["sprite", "collision"],
         "params": {
+            "spriteName": "wall",
             "color": "#3333FF",
             "size": 2,
             "collidable": true,
@@ -33,8 +34,9 @@
         }
     },
      "trawa": {
-        "modules": ["square", "collision"],
+        "modules": ["sprite", "collision"],
         "params": {
+            "spriteName": "trawa",
             "color": "#305530",
             "size": 30,
             "collidable": true,

@@ -1,57 +1,318 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ModEngine</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Mod Engine</title>
+    <script type="module" src="main.js"></script>
+    <script type="module" src="obj.js"></script>
+    <style>
+        :root {
+            --primary-color: #2a2a2a;
+            --secondary-color: #1e1e1e;
+            --accent-color: #9c1ea0;
+            --text-color: #1cc438;
+            --border-color: #3a3a3a;
+            --table-header-bg: #252525;
+            --table-row-odd: #2a2a2a;
+            --table-row-even: #242424;
+            --scrollbar-thumb: #4d4d4d;
+            --scrollbar-track: #1e1e1e;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            gap: 20px;
+            background-color: var(--primary-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            height: calc(100vh - 40px);
+        }
+
+        #game-container {
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+            width: 1000px;
+            height: 900px;
+            position: relative;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            background: var(--secondary-color);
+            transition: all 0.3s ease;
+        }
+
+        #game-container:hover {
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        #gameCanvas {
+            image-rendering: pixelated;
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: #121212;
+        }
+
+        .engine-title {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 14px;
+            color: var(--accent-color);
+            font-weight: bold;
+            background: rgba(30, 30, 30, 0.7);
+            padding: 4px 8px;
+            border-radius: 4px;
+            z-index: 10;
+        }
+
+        /* Стили для панели объектов */
+        .objects-panel {
+            flex: 1;
+            height: 100%;
+            background: var(--secondary-color);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 12px 16px;
+            background: var(--table-header-bg);
+            border-bottom: 1px solid var(--border-color);
+            font-weight: bold;
+            color: var(--accent-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .author-info {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .objects-container {
+            flex: 1;
+            overflow: auto;
+            padding: 0;
+        }
+
+        /* Кастомный скроллбар */
+        .objects-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .objects-container::-webkit-scrollbar-track {
+            background: var(--scrollbar-track);
+        }
+
+        .objects-container::-webkit-scrollbar-thumb {
+            background-color: var(--scrollbar-thumb);
+            border-radius: 4px;
+        }
+
+        .objects-table {
+            width: 100%;
+            border-collapse: collapse;
+            color: var(--text-color);
+        }
+
+        .objects-table th {
+            position: sticky;
+            top: 0;
+            background: var(--table-header-bg);
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .objects-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+
+        .objects-table tr:nth-child(odd) {
+            background-color: var(--table-row-odd);
+        }
+
+        .objects-table tr:nth-child(even) {
+            background-color: var(--table-row-even);
+        }
+
+        .objects-table tr:hover {
+            background-color: rgba(77, 121, 255, 0.1);
+        }
+
+        .json-view {
+            font-family: 'Consolas', monospace;
+            font-size: 12px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            max-height: 120px;
+            overflow: auto;
+        }
+
+        .fullscreen-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(30, 30, 30, 0.7);
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            z-index: 10;
+            transition: all 0.2s ease;
+        }
+
+        .fullscreen-btn:hover {
+            background: rgba(77, 121, 255, 0.2);
+        }
+
+        .game-container-wrapper {
+            position: relative;
+        }
+
+        /* Стили для полноэкранного режима */
+        #game-container.fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 9999;
+            border-radius: 0;
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #game-container.fullscreen #gameCanvas {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <div id="intro">
-            <div id="farh-title">
-                <span class="pixel-letter" id="r-letter"> </span>
-                <span class="pixel-letter" id="f-letter">Mod</span>
-                <span class="pixel-letter" id="r-letter"> </span>
-                <span class="pixel-letter" id="h-letter">Engine</span>
-            </div>
-            <div id="loading-bar">
-                <div id="loading-progress"></div>
-            </div>
-        </div>
-
-        <div id="auth-container" class="hidden">
-            <div class="auth-form" id="login-form">
-                <h2>Авторизация</h2>
-                <div class="form-group">
-                    <input type="text" id="login-username" placeholder="Имя пользователя" class="rusty-input">
-                </div>
-                <div class="form-group">
-                    <input type="password" id="login-password" placeholder="Пароль" class="rusty-input">
-                </div>
-                <button id="login-btn" class="industrial-btn">Войти</button>
-                <p>Нет аккаунта? <a href="#" id="show-register">Зарегистрироваться</a></p>
-            </div>
-
-            <div class="auth-form hidden" id="register-form">
-                <h2>Регистрация</h2>
-                <div class="form-group">
-                    <input type="text" id="register-username" placeholder="Имя пользователя" class="rusty-input">
-                </div>
-                <div class="form-group">
-                    <input type="password" id="register-password" placeholder="Пароль" class="rusty-input">
-                </div>
-                <div class="form-group">
-                    <input type="password" id="register-confirm" placeholder="Подтвердите пароль" class="rusty-input">
-                </div>
-                <button id="register-btn" class="industrial-btn">Зарегистрироваться</button>
-                <p>Уже есть аккаунт? <a href="#" id="show-login">Войти</a></p>
-            </div>
-
-            <div id="auth-message" class="hidden"></div>
+    <div class="game-container-wrapper">
+        <div id="game-container">
+            <div class="engine-title">MOD ENGINE</div>
+            <button class="fullscreen-btn" id="fullscreen-btn">Fullscreen</button>
+            <canvas id="gameCanvas" width="800" height="800"></canvas>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <div class="objects-panel">
+        <div class="panel-header">
+            <span>OBJECTS LIBRARY</span>
+            <div class="author-info">Author: Zareyn Emanachi</div>
+        </div>
+        <div class="objects-container">
+            <table class="objects-table">
+                <thead>
+                    <tr>
+                        <th>Object</th>
+                        <th>Parameters</th>
+                        <th>Preview</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Содержимое будет добавлено через obj.js -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Обработчик полноэкранного режима
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        const gameContainer = document.getElementById('game-container');
+        const gameCanvas = document.getElementById('gameCanvas');
+
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                // Сохраняем оригинальные размеры перед переходом в полноэкранный режим
+                gameContainer.dataset.originalWidth = gameContainer.style.width;
+                gameContainer.dataset.originalHeight = gameContainer.style.height;
+                
+                gameContainer.classList.add('fullscreen');
+                
+                if (gameContainer.requestFullscreen) {
+                    gameContainer.requestFullscreen();
+                } else if (gameContainer.webkitRequestFullscreen) {
+                    gameContainer.webkitRequestFullscreen();
+                } else if (gameContainer.msRequestFullscreen) {
+                    gameContainer.msRequestFullscreen();
+                }
+            } else {
+                gameContainer.classList.remove('fullscreen');
+                
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
+        }
+
+        // Обработчик изменения размера для масштабирования canvas
+        function handleResize() {
+            if (gameContainer.classList.contains('fullscreen')) {
+                // В полноэкранном режиме - масштабируем canvas
+                const scale = Math.min(
+                    window.innerWidth / 800,
+                    window.innerHeight / 800
+                );
+                
+                gameCanvas.style.width = `${800 * scale}px`;
+                gameCanvas.style.height = `${800 * scale}px`;
+                gameCanvas.style.margin = 'auto';
+                gameCanvas.style.display = 'block';
+            } else {
+                // В обычном режиме - возвращаем оригинальные размеры
+                gameCanvas.style.width = '100%';
+                gameCanvas.style.height = '100%';
+            }
+        }
+
+        // Слушатели событий
+        document.addEventListener('fullscreenchange', () => {
+            updateFullscreenButton();
+            handleResize();
+        });
+        
+        document.addEventListener('webkitfullscreenchange', () => {
+            updateFullscreenButton();
+            handleResize();
+        });
+        
+        document.addEventListener('msfullscreenchange', () => {
+            updateFullscreenButton();
+            handleResize();
+        });
+
+        window.addEventListener('resize', handleResize);
+
+        function updateFullscreenButton() {
+            fullscreenBtn.textContent = document.fullscreenElement ? 'Exit Fullscreen' : 'Fullscreen';
+        }
+    </script>
 </body>
 </html>
