@@ -1,0 +1,16 @@
+{
+    "test": {
+        "imagePath": "test.png",
+        "frameWidth": 64,
+        "frameHeight": 64,
+        "frames": [
+            {"x": 0, "y": 0, "width": 64, "height": 64}
+        ],
+        "animations": {
+            "default": {
+                "frames": [0],
+                "frameDuration": 0
+            }
+        }
+    }
+}

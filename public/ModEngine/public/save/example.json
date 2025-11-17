@@ -1,0 +1,44 @@
+{
+    "player": {
+        "modules": ["sprite", "move", "camera", "collision"],
+        "params": {
+            "spriteName": "test",
+            "size": 2,
+            "speed": 1,
+            "followSpeed": 0.1,
+            "smooth": true,
+            "width":500,
+            "height":500,
+            "collidable": true,
+            "solid": true,
+            "checkCollision": true
+        }
+    },
+    "wall": {
+        "modules": ["square", "collision"],
+        "params": {
+            "color": "#3333FF",
+            "size": 2,
+            "collidable": true,
+            "solid": true
+        }
+    },
+    "box": {
+        "modules": ["square", "collision"],
+        "params": {
+            "color": "#11FF11",
+            "size": 3,
+            "collidable": true,
+            "solid": false
+        }
+    },
+     "trawa": {
+        "modules": ["square", "collision"],
+        "params": {
+            "color": "#305530",
+            "size": 30,
+            "collidable": true,
+            "solid": false
+        }
+    }
+}
