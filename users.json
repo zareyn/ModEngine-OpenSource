@@ -1,0 +1,31 @@
+[
+  {
+    "id": "1757857987009",
+    "username": "123",
+    "password": "$2b$10$5Y.vVsbtILvlQgEmtMw0PumYif9MTsxnU/.y5q5nI5k.fNl4BH/Sm",
+    "createdAt": "2025-09-14T13:53:07.009Z"
+  },
+  {
+    "id": "1757861168143",
+    "username": "1234",
+    "password": "$2b$10$zeH5L.irvotL4M/uAeWcWeMoBEqgpXPIl2pg6NS.7E5jCF4c6d4bW",
+    "createdAt": "2025-09-14T14:46:08.143Z",
+    "resources": {
+      "metal": 100,
+      "fuel": 50,
+      "money": 0
+    },
+    "plots": [
+      {
+        "location": "city",
+        "x": 2,
+        "y": 0
+      },
+      {
+        "location": "city",
+        "x": 3,
+        "y": 0
+      }
+    ]
+  }
+]
